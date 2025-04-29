@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "bundler",
+        "allowImportingTsExtensions": true
+    },
+    "include": ["./*.ts"],
+    "exclude": ["node_modules", "build"]
+}
