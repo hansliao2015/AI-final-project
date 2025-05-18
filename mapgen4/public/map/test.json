@@ -1,0 +1,38 @@
+{
+  "mapName": "Ocean Core, Mountain Ring",
+  "seed": 187,
+  "globalParameters": {
+    "island": 0.5,
+    "noisy_coastlines": 0.01,
+    "mountain_sharpness": 9.8,
+    "ocean_depth": 1.5
+  },
+  "features": [
+    { "type": "ocean", "position": { "x": 0.5, "y": 0.5 }, "radius": 200 },
+    { "type": "ocean", "position": { "x": 0.45, "y": 0.5 }, "radius": 0.1 },
+    { "type": "ocean", "position": { "x": 0.55, "y": 0.5 }, "radius": 0.1 },
+    { "type": "ocean", "position": { "x": 0.5, "y": 0.45 }, "radius": 0.1 },
+    { "type": "ocean", "position": { "x": 0.5, "y": 0.55 }, "radius": 0.1 },
+
+    { "type": "mountain", "position": { "x": 0.5, "y": 0.1 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.3, "y": 0.1 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.7, "y": 0.1 }, "radius": 0.1 },
+
+    { "type": "mountain", "position": { "x": 0.5, "y": 0.9 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.3, "y": 0.9 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.7, "y": 0.9 }, "radius": 0.1 },
+
+    { "type": "mountain", "position": { "x": 0.1, "y": 0.5 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.1, "y": 0.3 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.1, "y": 0.7 }, "radius": 0.1 },
+
+    { "type": "mountain", "position": { "x": 0.9, "y": 0.5 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.9, "y": 0.3 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.9, "y": 0.7 }, "radius": 0.1 },
+
+    { "type": "mountain", "position": { "x": 0.1, "y": 0.1 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.9, "y": 0.1 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.1, "y": 0.9 }, "radius": 0.12 },
+    { "type": "mountain", "position": { "x": 0.9, "y": 0.9 }, "radius": 0.12 }
+  ]
+}

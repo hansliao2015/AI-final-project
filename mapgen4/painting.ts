@@ -137,6 +137,19 @@ let exported = {
     constraints: heightMap.elevation,
     setElevationParam: elevationParam => heightMap.setElevationParam(elevationParam),
     userHasPainted: () => heightMap.userHasPainted,
+    resetCanvas: () => {
+        heightMap.generate();
+        heightMap.userHasPainted = false;
+    },
+    paintAt: (
+        tool: { elevation: number },
+        x0: number,
+        y0: number,
+        size: { innerRadius: number; outerRadius: number; rate: number },
+        deltaTimeInMs: number
+    ): void => {
+        heightMap.paintAt(tool, x0, y0, size, deltaTimeInMs);
+    },
 };
 
 document.getElementById('button-reset').addEventListener('click', () => {

@@ -18,6 +18,7 @@ import {makeMesh} from "./mesh.ts";
 import Painting from "./painting.ts";
 import Renderer from "./render.ts";
 import type {Mesh} from "./types.d.ts";
+import { applyMapSpecification, MapSpecification } from "./map-specification.ts";
 
 
 
@@ -63,11 +64,38 @@ const initialParams = {
     ],
 };
 
+function loadMapSpecification(jsonSpec: string) {  
+    try {  
+        const spec = JSON.parse(jsonSpec) as MapSpecification;  
+        applyMapSpecification(spec);  
+        return true;  
+    } catch (e) {  
+        console.error("Failed to load map specification:", e);  
+        return false;  
+    }  
+}
+
+async function loadMapSpecificationFromUrl(url: string) {  
+  try {  
+    const response = await fetch(url);  
+    if (!response.ok) {  
+      throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);  
+    }  
+    const jsonSpec = await response.text();  
+    console.log("map info:", jsonSpec);
+    return loadMapSpecification(jsonSpec);  
+  } catch (e) {  
+    console.error("Failed to load map specification from URL:", e);  
+    return false;  
+  }  
+}  
+
     
 /**
  * Starts the UI, once the mesh has been loaded in.
  */
-function main({mesh, t_peaks}: { mesh: Mesh; t_peaks: number[]; }) {
+async function main({mesh, t_peaks}: { mesh: Mesh; t_peaks: number[]; }) {
+    console.log("Mesh loaded!!");
     let render = new Renderer(mesh);
 
     /* set initial parameters */
@@ -218,6 +246,14 @@ function main({mesh, t_peaks}: { mesh: Mesh; t_peaks: number[]; }) {
 
     const downloadButton = document.getElementById('button-download');
     if (downloadButton) downloadButton.addEventListener('click', download);
+
+    const success = await loadMapSpecificationFromUrl('./public/map/test.json');
+    if (success) {
+        console.log("Map loaded successfully!");
+    } else {
+        console.error("Failed to load map");
+    }
+
 }
 
 makeMesh().then(main);
