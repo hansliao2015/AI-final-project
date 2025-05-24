@@ -1,0 +1,37 @@
+{
+  "mapName": "Valley Cross, Ocean Edge",
+  "seed": 187,
+  "globalParameters": {
+    "island": 0.5,
+    "noisy_coastlines": 0.01,
+    "mountain_sharpness": 9.8,
+    "ocean_depth": 1.5
+  },
+  "features": [
+    { "type": "ocean", "position": { "x": 0.0, "y": 0.5 }, "radius": 0.4 },
+    { "type": "ocean", "position": { "x": 0.1, "y": 0.6 }, "radius": 5 },
+    { "type": "ocean", "position": { "x": 0.2, "y": 0.7 }, "radius": 5 },
+    
+    { "type": "valley", "position": { "x": 0.3, "y": 0.5 }, "radius": 0.15 },
+    { "type": "valley", "position": { "x": 0.5, "y": 0.5 }, "radius": 0.2 },
+    { "type": "valley", "position": { "x": 0.7, "y": 0.5 }, "radius": 0.15 },
+    { "type": "valley", "position": { "x": 0.5, "y": 0.3 }, "radius": 0.1 },
+    { "type": "valley", "position": { "x": 0.5, "y": 0.7 }, "radius": 0.1 },
+    
+    { "type": "mountain", "position": { "x": 0.2, "y": 0.2 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.8, "y": 0.2 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.2, "y": 0.8 }, "radius": 0.1 },
+    { "type": "mountain", "position": { "x": 0.8, "y": 0.8 }, "radius": 0.1 },
+    
+    { "type": "river", "position": { "x": 0.0, "y": 0.0 }, "radius": 0.025 },
+    { "type": "river", "position": { "x": 0.15, "y": 0.15 }, "radius": 0.025 },
+    { "type": "river", "position": { "x": 0.3, "y": 0.3 }, "radius": 0.03 },
+    { "type": "river", "position": { "x": 0.45, "y": 0.45 }, "radius": 0.03 },
+    { "type": "river", "position": { "x": 0.6, "y": 0.6 }, "radius": 0.025 },
+    { "type": "river", "position": { "x": 0.75, "y": 0.75 }, "radius": 0.02 },
+    { "type": "ocean", "position": { "x": 0.3, "y": 0.8 }, "radius": 0.01 },
+    { "type": "ocean", "position": { "x": 0.4, "y": 0.9 }, "radius": 0.02 },
+    { "type": "ocean", "position": { "x": 0.5, "y": 1.0 }, "radius": 0.04 },
+    { "type": "ocean", "position": { "x": 0.6, "y": 1.0 }, "radius": 0.01 }
+  ]
+}

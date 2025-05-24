@@ -247,7 +247,8 @@ async function main({mesh, t_peaks}: { mesh: Mesh; t_peaks: number[]; }) {
     const downloadButton = document.getElementById('button-download');
     if (downloadButton) downloadButton.addEventListener('click', download);
 
-    const success = await loadMapSpecificationFromUrl('./public/map/test.json');
+    const success = await loadMapSpecificationFromUrl('./public/map/test2.json');
+    console.log("loading map spec from URL", success);
     if (success) {
         console.log("Map loaded successfully!");
     } else {
