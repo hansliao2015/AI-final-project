@@ -25,3 +25,4 @@ dist-ssr
 
 public/build
 src/lib/mapgen4/
+.env

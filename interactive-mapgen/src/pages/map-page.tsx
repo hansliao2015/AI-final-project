@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { UserInput } from "@/components/user-input"
 
 type Phase = "elevation" | "biomes" | "rivers" | "render"
 type Param = Record<string, number | object> & Record<Phase, Record<string, number>>
@@ -281,6 +282,9 @@ export function MapPage() {
         <div ref={containerRef} id="map" className="flex flex-1 items-center">
           <canvas ref={canvasRef} id="mapgen4" style={{ width: size, height: size }} />
         </div>
+      </div>
+      <div>
+        <UserInput />
       </div>
     </div>
   )

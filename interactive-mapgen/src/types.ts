@@ -8,7 +8,7 @@ export interface IConfig extends Record<TTerrain, TLocation[]> {
   selection: [TPoint, TPoint]
 }
 
-export interface ITransation {
+export interface ITransaction {
   type: TBrush
   position: TPoint
   scale: TScale
