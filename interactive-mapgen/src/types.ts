@@ -13,3 +13,15 @@ export interface ITransaction {
   position: TPoint
   scale: TScale
 }
+
+export interface IAppState {
+  isLoading: boolean
+  inputText: string
+  config: IConfig | null
+  transactions: ITransaction[]
+
+  setIsLoading: (isLoading: boolean) => void
+  setInputText: (inputText: string) => void
+  setConfig: (config: IConfig | null) => void
+  setTransactions: (transactions: ITransaction[]) => void
+}

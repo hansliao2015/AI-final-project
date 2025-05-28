@@ -1,35 +1,36 @@
-import OpenAI from 'openai';
-import type { IConfig, ITransaction } from '@/types';
-import transactionPrompt from '@/prompts/transaction-prompt';
+import OpenAI from "openai"
 
+import type { IConfig, ITransaction } from "@/types"
+import transactionPrompt from "@/prompts/transaction-prompt"
 
-export async function callTransactionApi(config: IConfig): Promise<ITransaction[] | null> {
+export async function callTransactionApi(config: IConfig): Promise<ITransaction[]> {
   const client = new OpenAI({
     apiKey: import.meta.env.VITE_GROK_API_KEY,
-    baseURL: 'https://api.x.ai/v1',
+    baseURL: "https://api.x.ai/v1",
     dangerouslyAllowBrowser: true,
-  });
+  })
 
   const completion = await client.chat.completions.create({
-    model: 'grok-3-mini',
+    model: "grok-3-mini",
     messages: [
       {
-        role: 'system',
+        role: "system",
         content: transactionPrompt,
       },
       {
-        role: 'user',
-        content: config ? "Here is the config: " + JSON.stringify(config) : '',
+        role: "user",
+        content: config ? "Here is the config: " + JSON.stringify(config) : "",
       },
     ],
-  });
+  })
 
-  const content = completion.choices[0].message.content;
+  const content = completion.choices[0].message.content
   try {
-    if (!content) return null;
-    return JSON.parse(content.trim());
+    if (!content) return []
+    return JSON.parse(content.trim())
   } catch (e) {
-    console.error('not valid json, output: ', content);
-    return null;
+    console.error("Error parsing JSON content: ", e)
+    console.error("Invalid JSON content: ", content)
+    return []
   }
 }

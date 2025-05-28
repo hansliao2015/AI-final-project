@@ -1,7 +1,7 @@
 import OpenAI from "openai"
+
 import type { IConfig } from "@/types"
 import configPrompt from "@/prompts/config-prompt"
-
 
 export async function callConfigApi(instruction: string): Promise<IConfig | null> {
   const client = new OpenAI({
@@ -28,7 +28,8 @@ export async function callConfigApi(instruction: string): Promise<IConfig | null
     if (!content) return null;
     return JSON.parse(content.trim())
   } catch (e) {
-    console.error("not valid json, output: ", content)
+    console.error("Error parsing JSON content: ", e)
+    console.error("Invalid JSON content: ", content)
     return null
   }
 }

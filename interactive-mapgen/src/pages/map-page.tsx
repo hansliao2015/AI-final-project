@@ -13,6 +13,9 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { UserInput } from "@/components/user-input"
 
+import type { TBrush, TScale } from "@/types"
+import { useAppStore } from "@/store"
+
 type Phase = "elevation" | "biomes" | "rivers" | "render"
 type Param = Record<string, number | object> & Record<Phase, Record<string, number>>
 
@@ -61,6 +64,8 @@ const initialParams: Record<Phase, [string, number, number, number][]> = {
 export function MapPage() {
   const { mapId } = useParams()
 
+  const transactions = useAppStore(state => state.transactions)
+
   const containerRef = useRef<HTMLDivElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const initializedRef = useRef<boolean>(false)
@@ -79,11 +84,11 @@ export function MapPage() {
     })) as Record<Phase, Record<string, number>>
   })
   const [render, setRender] = useState<import("@/lib/mapgen4/render").default | null>(null)
-  const [Painting, setPainting] = useState<typeof import("@/lib/mapgen4/painting").default | null>(null)
+  const [Painting, setPainting] = useState<typeof import("@/lib/mapgen4-painting").default | null>(null)
   const [mesh, setMesh] = useState<Mesh | null>(null)
   const [tPeaks, setTPeaks] = useState<number[]>([])
   const [hasPainted, setHasPainted] = useState<boolean>(false)
-  const [needUpdate, setNeedUpdate] = useState<boolean>(false)
+  const [updateTime, setUpdateTime] = useState<number | null>(Date.now())
 
   const { width = 0, height = 0 } = useResizeObserver({ ref: containerRef as RefObject<HTMLDivElement> })
 
@@ -109,12 +114,12 @@ export function MapPage() {
                   console.error("Invalid seed value", e)
                 }
                 setParam(param => param ? ({
-                ...param,
-                [phase]: {
-                  ...param[phase],
-                  [name]: isNaN(seed) ? initialValue : seed
-                }
-              }) : param)
+                  ...param,
+                  [phase]: {
+                    ...param[phase],
+                    [name]: isNaN(seed) ? initialValue : seed
+                  }
+                }) : param)
               }} />
             ) : (
               <Slider value={[param?.[phase][name] ?? initialValue]} min={min} max={max} step={step} disabled={name === "island" ? hasPainted : false} onValueChange={value => {
@@ -176,7 +181,6 @@ export function MapPage() {
           render.a_river_xyuv.buffer,
         ])
       } else workRequestedRef.current = true
-      if (needUpdate) setNeedUpdate(false)
     }
 
     async function initialize() {
@@ -187,7 +191,7 @@ export function MapPage() {
       setTPeaks(t_peaks)
 
       const render = new (await import("@/lib/mapgen4/render").then(m => m.default))(mesh)
-      const Painting = await import("@/lib/mapgen4/painting").then(m => m.default)
+      const Painting = await import("@/lib/mapgen4-painting").then(m => m.default)
 
       setRender(render)
       setPainting(Painting)
@@ -199,7 +203,7 @@ export function MapPage() {
       }
 
       Painting.onUpdate = () => {
-        setNeedUpdate(true)
+        setUpdateTime(Date.now())
         generate()
       }
 
@@ -234,6 +238,7 @@ export function MapPage() {
             generate()
           })
         }
+        setUpdateTime(null)
       })
 
       worker.postMessage({ mesh, t_peaks, param })
@@ -242,7 +247,38 @@ export function MapPage() {
 
     if (!initializedRef.current) initialize()
     else generate()
-  }, [param, render, Painting, mesh, tPeaks, needUpdate, worker])
+  }, [param, render, Painting, mesh, tPeaks, updateTime, worker])
+
+  useEffect(() => {
+    if (transactions.length === 0 || !Painting) return
+    const brushes: Record<TBrush, { elevation: number }> = {
+      ocean: { elevation: -0.25 },
+      water: { elevation: -0.05 },
+      valley: { elevation: +0.05 },
+      mountain: { elevation: +1.0 }
+    }
+    const scales: Record<TScale, {
+      innerRadius: number
+      outerRadius: number
+      rate: number
+    }> = {
+      xs: { rate: 9, innerRadius: 1.5, outerRadius: 2.5 },
+      s: { rate: 8, innerRadius: 2, outerRadius: 6 },
+      m: { rate: 5, innerRadius: 5, outerRadius: 10 },
+      l: { rate: 3, innerRadius: 10, outerRadius: 16 },
+      xl: { rate: 1, innerRadius: 20, outerRadius: 30 }
+    }
+    Painting.resetCanvas()
+    Painting.paintAt(brushes.ocean, 0.5, 0.5, {
+      innerRadius: 100,
+      outerRadius: 100,
+      rate: 5
+    }, 100)
+    transactions.forEach(({ type, position: [x, y], scale }) => {
+      Painting.paintAt(brushes[type], x / 2048, y / 2048, scales[scale], 100)
+    })
+    setUpdateTime(Date.now())
+  }, [transactions, Painting])
 
   return (
     <div className="flex flex-col flex-1 gap-4">

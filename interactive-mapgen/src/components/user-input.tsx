@@ -1,22 +1,25 @@
-import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+
+import { useAppStore } from "@/store"
+
 import { callConfigApi } from "@/api/config"
 import { callTransactionApi } from "@/api/transaction"
-import type { ITransaction, IConfig } from "@/types"
 
 export function UserInput() {
-  const [userInput, setUserInput] = useState("")
-  const [isloading, setIsLoading] = useState(false)
-  const [config, setConfig] = useState<IConfig | null>(null)
-  const [transactions, setTransactions] = useState<ITransaction[] | null>(null)
+  const inputText = useAppStore(state => state.inputText)
+  const setUserInput = useAppStore(state => state.setInputText)
+  const isLoading = useAppStore(state => state.isLoading)
+  const setIsLoading = useAppStore(state => state.setIsLoading)
+  const setConfig = useAppStore(state => state.setConfig)
+  const setTransactions = useAppStore(state => state.setTransactions)
 
   async function handleSubmit() {
     setIsLoading(true)
     setConfig(null)
-    setTransactions(null)
+    setTransactions([])
     try {
-      const config = await callConfigApi(userInput)
+      const config = await callConfigApi(inputText)
       setConfig(config)
       console.log("AI generated config: ", config)
       if (config) {
@@ -32,19 +35,21 @@ export function UserInput() {
   }
 
   return (
-    <div className="flex flex-col mx-6 my-6 gap-2">
+    <div className="flex items-center m-6 gap-2">
       <Input
-        value={userInput}
-        onChange={e => setUserInput(e.target.value)}
+        value={inputText}
+        onChange={({ target }) => setUserInput(target.value)}
+        onKeyDown={({ key }) => {
+          if (key === "Enter" && !isLoading && inputText.trim()) handleSubmit()
+        }}
         placeholder="請輸入描述，例如：北方有山，中心有湖"
-        disabled={isloading}
+        disabled={isLoading}
       />
       <Button
         onClick={handleSubmit}
-        disabled={isloading || !userInput.trim()}
-        className="mt-1"
+        disabled={isLoading || !inputText.trim()}
       >
-        {isloading ? "Generating..." : "Generate Config"}
+        {isLoading ? "Generating..." : "Generate Config"}
       </Button>
     </div>
   )
