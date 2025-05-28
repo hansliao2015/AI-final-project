@@ -1,13 +1,42 @@
-# 113-2 Intro-to-AI final project
-## Install
+# Interactive Mapgen
+
+## Installation
+
+Install the required packages:
+
+```bash
+cd interactive-mapgen
+pnpm install
 ```
-cd mapgen4
+
+Install [Mapgen4](https://github.com/redblobgames/mapgen4/) and follow [their instructions](https://github.com/redblobgames/mapgen4/?tab=readme-ov-file#install) to build it:
+
+```bash
+git clone https://github.com/redblobgames/mapgen4.git ./src/lib/mapgen4
+cd src/lib/mapgen4
+
+# Copied from Mapgen4 README, you can use either `npm` or `pnpm`.
+npm install -g esbuild
 npm install
 ./build.sh
 ```
-## Run
+
+Copy the `src/lib/mapgen4/build` directory to the `public` directory in this project:
+
+```bash
+cp -r ./build ../../../public/build
 ```
-cd mapgen4
-python3 -m http.server 8000
+
+Then, go back to the root directory of this project:
+
+```bash
+cd ../../..
 ```
-http://localhost:8000/embed.html
+
+## Usage
+
+Run the development server:
+
+```bash
+pnpm run dev
+```
