@@ -9,6 +9,15 @@ cd interactive-mapgen
 pnpm install
 ```
 
+
+Create a `.env` file inside the `interactive-mapgen` directory and add your API key:
+
+```bash
+# Note: This file is used for local development and should be ignored by Git via .gitignore
+VITE_GROK_API_KEY="your-api-key-here"
+```
+
+
 Install [Mapgen4](https://github.com/redblobgames/mapgen4/) and follow [their instructions](https://github.com/redblobgames/mapgen4/?tab=readme-ov-file#install) to build it:
 
 ```bash
