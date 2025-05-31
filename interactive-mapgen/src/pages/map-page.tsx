@@ -71,6 +71,8 @@ export function MapPage() {
   const initializedRef = useRef<boolean>(false)
   const workingRef = useRef<boolean>(false)
   const workRequestedRef = useRef<boolean>(false)
+  
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null)
 
   const [param, setParam] = useState<Param>({
     spacing: 5.5,
@@ -94,6 +96,37 @@ export function MapPage() {
 
   const size = useMemo<number>(() => Math.min(width, height), [width, height])
   const worker = useMemo<Worker>(() => new window.Worker("build/_worker.js"), [])
+
+  useEffect(() => {
+    if (!canvasRef.current) return
+    
+    const canvas = canvasRef.current
+    
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      const scaleX = 2048 / rect.width
+      const scaleY = 2048 / rect.height
+      
+      const x = Math.round((event.clientX - rect.left) * scaleX)
+      const y = Math.round((event.clientY - rect.top) * scaleY)
+      
+      if (x >= 0 && x <= 2048 && y >= 0 && y <= 2048) {
+        setMousePosition({ x, y })
+      }
+    }
+    
+    const handleMouseLeave = () => {
+      setMousePosition(null)
+    }
+    
+    canvas.addEventListener('mousemove', handleMouseMove)
+    canvas.addEventListener('mouseleave', handleMouseLeave)
+    
+    return () => {
+      canvas.removeEventListener('mousemove', handleMouseMove)
+      canvas.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [canvasRef.current])
 
   const controllers = useMemo(() => {
     /* set initial parameters */
@@ -269,11 +302,11 @@ export function MapPage() {
       xl: { rate: 1, innerRadius: 20, outerRadius: 30 }
     }
     Painting.resetCanvas()
-    Painting.paintAt(brushes.ocean, 0.5, 0.5, {
-      innerRadius: 100,
-      outerRadius: 100,
-      rate: 5
-    }, 100)
+    // Painting.paintAt(brushes.ocean, 0.5, 0.5, {
+    //   innerRadius: 100,
+    //   outerRadius: 100,
+    //   rate: 5
+    // }, 100)
     transactions.forEach(({ type, position: [x, y], scale }) => {
       Painting.paintAt(brushes[type], x / 2048, y / 2048, scales[scale], 100)
     })
@@ -315,8 +348,20 @@ export function MapPage() {
             <Button id="button-reset" className="cursor-pointer" variant="destructive" disabled={!hasPainted}>Reset</Button>
           </div>
         </ScrollArea>
-        <div ref={containerRef} id="map" className="flex flex-1 items-center">
+        <div ref={containerRef} id="map" className="flex flex-1 items-center relative">
           <canvas ref={canvasRef} id="mapgen4" style={{ width: size, height: size }} />
+          
+          {mousePosition && (
+            <div 
+              className="absolute bg-black/70 text-white px-2 py-1 rounded-md text-sm pointer-events-none"
+              style={{ 
+                bottom: 10, 
+                right: 10,
+              }}
+            >
+              Position: {mousePosition.x}, {mousePosition.y}
+            </div>
+          )}
         </div>
       </div>
       <div>

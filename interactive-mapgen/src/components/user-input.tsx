@@ -5,6 +5,8 @@ import { useAppStore } from "@/store"
 
 import { callConfigApi } from "@/api/config"
 import { callTransactionApi } from "@/api/transaction"
+import { callOptimizationApi } from "@/api/optimization"
+import { useState } from "react"
 
 export function UserInput() {
   const inputText = useAppStore(state => state.inputText)
@@ -14,20 +16,23 @@ export function UserInput() {
   const setConfig = useAppStore(state => state.setConfig)
   const setTransactions = useAppStore(state => state.setTransactions)
 
+  const [isComposing, setIsComposing] = useState<boolean>(false)
+
   async function handleSubmit() {
     setIsLoading(true)
     setConfig(null)
     setTransactions([])
     try {
+      console.log("User input: ", inputText)
       const config = await callConfigApi(inputText)
       setConfig(config)
       console.log("AI generated config: ", config)
-      if (config) {
-        const transactions = await callTransactionApi(config)
-        setTransactions(transactions)
-        console.log("AI generated transactions: ", transactions)
-        setUserInput("")
-      }
+      const optimizedInstruction = await callOptimizationApi(inputText)
+      console.log("Optimized instruction: ", optimizedInstruction)
+      const transactions = await callTransactionApi(config, optimizedInstruction)
+      setTransactions(transactions)
+      console.log("AI generated transactions: ", transactions)
+      setUserInput("")
     } catch (e) {
       console.error("AI error: ", e)
     }
@@ -39,7 +44,10 @@ export function UserInput() {
       <Input
         value={inputText}
         onChange={({ target }) => setUserInput(target.value)}
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={() => setIsComposing(false)}
         onKeyDown={({ key }) => {
+          if (isComposing) return
           if (key === "Enter" && !isLoading && inputText.trim()) handleSubmit()
         }}
         placeholder="請輸入描述，例如：北方有山，中心有湖"
