@@ -7,8 +7,8 @@ const optimizationPrompt = `
 ---
 ## 地形分層原則（務必執行）：
 1. **輸出valley要鋪設的位置：這一步是要擬定地圖大致上的輪廓**
-2. **再繪製 mountain，並在其周圍補上 valley 作為過渡緩衝**
-3. **最後才繪製 water、hill、ocean 等**
+2. **再繪製 mountain 和 ocean，並在其周圍補上 valley、water 作為過渡緩衝**
+3. **最後才繪製 water、hill、lake 等**
 小技巧：
 根據你要生成山脈的位置，提前鋪設 valley 作為基礎地形，確保山脈能自然嵌入地形中。
 如果input是「中央是湖，周圍是山」，你可以在中央(x, y∈ [700, 1300])先鋪設一個大範圍的 valley 作為基礎地形，然後在中央區域添加 water，再在周圍添加 mountain。
