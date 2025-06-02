@@ -1,0 +1,9 @@
+Generate plains in the northwest; generate oceans in the center, northeast, and southwest.
+
+
+
+
+
+
+
+

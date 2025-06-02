@@ -1,0 +1,1 @@
+Generate lakes in the center and southwest; generate mountains in the north
