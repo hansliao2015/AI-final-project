@@ -71,6 +71,7 @@ export function MapPage() {
   const initializedRef = useRef<boolean>(false)
   const workingRef = useRef<boolean>(false)
   const workRequestedRef = useRef<boolean>(false)
+  const currentViewParamsRef = useRef<Record<string, number>>({})
   
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null)
 
@@ -164,8 +165,13 @@ export function MapPage() {
                   }
                 }) : param)
                 if (phase === "render") {
+                  currentViewParamsRef.current = {
+                    ...currentViewParamsRef.current,
+                    [name]: value[0]
+                  }
                   render?.updateView({
                     ...param.render,
+                    ...currentViewParamsRef.current,
                     [name]: value[0]
                   })
                 }
@@ -229,6 +235,8 @@ export function MapPage() {
       setRender(render)
       setPainting(Painting)
 
+      currentViewParamsRef.current = { ...param.render }
+
       Painting.screenToWorldCoords = coords => {
         if (!render) return coords
         const out = render.screenToWorld(coords)
@@ -264,7 +272,14 @@ export function MapPage() {
         render.a_river_xyuv = new Float32Array(a_river_xyuv_buffer)
         render.numRiverTriangles = numRiverTriangles
         render.updateMap()
-        render.updateView(param.render)
+        render.updateView({
+          ...param.render,
+          ...currentViewParamsRef.current,
+          canvas: canvasRef.current,
+          size: size,
+          width: size,
+          height: size
+        })
         if (workRequestedRef.current) {
           requestAnimationFrame(() => {
             workRequestedRef.current = false
