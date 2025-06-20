@@ -11,6 +11,8 @@ Users can input descriptions like:
 ```
 Our system interprets this input semantically, applies the appropriate transformations (transactions), and renders the map accordingly.
 
+📽️ For a more detailed explanation of the process and map features, watch the [**Introduction video**](https://youtu.be/RSEdKO2hUT0)
+
 <img src="interactive-mapgen/public/workflow.png" width="80%">
 
 ## Prerequisites
